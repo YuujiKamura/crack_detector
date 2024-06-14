@@ -31,6 +31,9 @@ class GridController:
     def get_image_by_stage(self, stage):
         return self.images.get(stage, None)
 
+    def set_image_by_stage(self, stage, image):
+        self.images[stage] = image
+
     def get_width_height(self):
         return self.width, self.height
 
