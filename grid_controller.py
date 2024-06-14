@@ -57,8 +57,11 @@ class GridController:
 
     def update_slider(self, cv2, value):
         self.final_dst = update_vertical_transform(cv2, value, self.get_image_by_stage("original").copy(), self.width, self.height, self.grid_size, self.line_thickness, self.font_scale, draw_grid)
+        draw_grid( cv2, self.final_dst, self.grid_size, self.line_thickness, self.font_scale)
         self.set_final_dst(self.final_dst, stage="vertical_transformed")
         cv2.imshow('Transformed', self.final_dst)
+        # ウィンドウのサイズを画像のサイズに合わせて変更
+        cv2.resizeWindow('Transformed', self.final_dst.shape[1], self.final_dst.shape[0])
 
     def update_line_thickness(self, cv2, value):
         self.line_thickness = int(value)

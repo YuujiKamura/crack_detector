@@ -1,13 +1,11 @@
 import cv2
 import numpy as np
 
-
 def enhance_contrast(image, clip_limit):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(8, 8))
     enhanced = clahe.apply(gray)
     return enhanced
-
 
 def detect_edges(image, method='canny', threshold1=100, threshold2=200):
     if method == 'canny':
@@ -22,9 +20,7 @@ def detect_edges(image, method='canny', threshold1=100, threshold2=200):
         edges = cv2.convertScaleAbs(edges)
     else:
         raise ValueError(f"Unknown edge detection method: {method}")
-
     return edges
-
 
 def detect_cracks(image, method='canny', threshold1=100, threshold2=200, clip_limit=2.0):
     enhanced = enhance_contrast(image, clip_limit)
@@ -37,8 +33,26 @@ def detect_cracks(image, method='canny', threshold1=100, threshold2=200, clip_li
         edges = cv2.convertScaleAbs(edges)
 
     contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    crack_area = 0
     for contour in contours:
-        if cv2.contourArea(contour) > 10:
-            cv2.drawContours(image, [contour], -1, (0, 255, 0), 1)
+        area = cv2.contourArea(contour)
+        if area > 10:
+            cv2.drawContours(image, [contour], -1, (0, 150, 255), 1)
+            crack_area += area
+
+    total_area = image.shape[0] * image.shape[1]
+    crack_percentage = (crack_area / total_area) * 100
+
+    # クラック面積の割合を画像に描画
+    text = f"Crack area: {crack_percentage:.1f}%"
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 1
+    font_thickness = 2
+    text_size, _ = cv2.getTextSize(text, font, font_scale, font_thickness)
+    text_x = 10
+    text_y = 30
+    text_color = (0, 0, 0)
+    cv2.putText(image, text, (text_x, text_y), font, font_scale, text_color, font_thickness)
 
     return image
+

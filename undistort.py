@@ -46,7 +46,6 @@ def main():
 
     cv2.namedWindow('Transformed')
     cv2.imshow('Transformed', gc.get_final_dst())
-    cv2.setMouseCallback('Transformed', lambda event, x, y, flags, param=gc.get_final_dst(): gc.toggle_highlight(cv2, event, x, y, flags, img_copy))
 
     root.mainloop()
 

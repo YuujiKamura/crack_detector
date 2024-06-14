@@ -48,7 +48,7 @@ def create_settings_window(gc, cv2, copy_image_to_clipboard):
 
 def detect_and_update_cracks(gc, cv2):
     method = "canny"  # edge detection method, could be configurable
-    threshold1 = 50
+    threshold1 = 130
     threshold2 = 150
 
     cracked_image = detect_cracks(gc.get_image_by_stage("vertical_transformed").copy(), method, threshold1, threshold2)

@@ -12,5 +12,5 @@ def update_vertical_transform( cv2, weight, initial_dst, width, height, grid_siz
         final_dst = np.vstack((final_dst, padding))
 
     final_dst_copy = final_dst.copy()
-    draw_grid( cv2, final_dst_copy, grid_size, line_thickness, font_scale)
+
     return final_dst_copy
