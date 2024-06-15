@@ -2,7 +2,7 @@ import numpy as np
 
 def vertical_transform(cv2, weight, initial_dst, width, height):
 
-    scale_factor = float(weight) * 0.1
+    scale_factor = float(weight) * 0.01
 
     final_dst = cv2.resize(initial_dst, (width, int(height * scale_factor)))
     if final_dst.shape[0] > height:

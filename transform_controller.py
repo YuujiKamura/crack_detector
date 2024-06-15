@@ -8,6 +8,7 @@ class TransformController:
         self.initial_dst = None
         self.original_image = None
         self.dragging_point_index = None
+        self.running = True
 
     def set_selected_image(self, image):
         self.original_image = image.copy()
@@ -35,6 +36,10 @@ class TransformController:
 
         elif event == cv2.EVENT_LBUTTONUP:
             self.dragging_point_index = None
+
+        elif event == cv2.EVENT_RBUTTONDOWN:
+            print("Right button clicked, stopping waitKey.")
+            self.running = False
 
     def draw_points_and_lines(self, cv2, image_data):
         c_white = (255,255,255)

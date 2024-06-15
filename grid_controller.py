@@ -20,6 +20,7 @@ class GridController:
         self.grid_size = 50
         self.line_thickness = 1
         self.font_scale = 0.5
+        self.clip_limit = 2  # Default value
         self.points = []
 
     def set_final_dst(self, dst, stage="default"):
@@ -76,6 +77,9 @@ class GridController:
     def update_grid_size(self, cv2, size):
         self.grid_size = int(size)
         self.update_slider(cv2, self.slider.get())
+
+    def update_clip_limit(self, val):
+        self.clip_limit = int(val)
 
     def draw_grid(self, cv2):
         if self.cracked_image is not None:

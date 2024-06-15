@@ -1,6 +1,17 @@
 import cv2
 import numpy as np
 
+def detect_and_update_image(gc, cv2):
+    method = "canny"  # edge detection method, could be configurable
+    threshold1 = 100
+    threshold2 = 200
+
+    cracked_image = detect_cracks(gc.transformed_image.copy(), method, threshold1, threshold2, gc.clip_limit )
+    gc.cracked_image = cracked_image
+
+    gc.set_final_dst( gc.draw_grid(cv2), stage="cracked")
+    cv2.imshow('Transformed', gc.get_final_dst())
+
 def enhance_contrast(image, clip_limit):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(8, 8))
@@ -22,7 +33,8 @@ def detect_edges(image, method='canny', threshold1=100, threshold2=200):
         raise ValueError(f"Unknown edge detection method: {method}")
     return edges
 
-def detect_cracks(image, method='canny', threshold1=100, threshold2=200, clip_limit=2.0):
+def detect_cracks(image, method='canny', threshold1=100, threshold2=200, clip_limit=5.0):
+    color = (0,150,250)
     enhanced = enhance_contrast(image, clip_limit)
     edges = detect_edges(enhanced, method, threshold1, threshold2)
 
@@ -37,7 +49,7 @@ def detect_cracks(image, method='canny', threshold1=100, threshold2=200, clip_li
     for contour in contours:
         area = cv2.contourArea(contour)
         if area > 10:
-            cv2.drawContours(image, [contour], -1, (0, 150, 255), 1)
+            cv2.drawContours(image, [contour], -1, color, 1)
             crack_area += area * 10
 
     total_area = image.shape[0] * image.shape[1]

@@ -18,9 +18,13 @@ def main():
     cv2.namedWindow('image')
     cv2.setMouseCallback('image', lambda event, x, y, flags, param=img_selected: tc.select_points(cv2, event, x, y, flags, img_selected))
 
-    cv2.imshow('image', img_selected)
-    print("画像上で4つのポイントをクリックしてください（左上、右上、右下、左下の順序で）")
-    cv2.waitKey(0)
+    while True:
+        cv2.imshow('image', img_selected)
+        key = cv2.waitKey(1) & 0xFF
+        if key == 13:  # Enter key to break
+            break
+        if not tc.running:  # 右クリックでtc.runningがFalseになると待機状態を解除
+            break
 
     points = tc.get_points()
     if len(points) != 4:
@@ -35,7 +39,6 @@ def main():
     gc.set_final_dst(initial_dst)
     gc.original_image = initial_dst.copy()  # オリジナルの画像を保持
     gc.set_image("original", initial_dst.copy())  # 初期変換後の画像を保存
-
 
     cv2.namedWindow('Transformed')
     cv2.imshow('Transformed', gc.get_final_dst())

@@ -14,6 +14,7 @@ def select_file():
 
     img = cv2.imread(file_path)
     if img is None:
+        print(f"Error: Could not read image from {file_path}")
         return False, None
 
     return True, img
