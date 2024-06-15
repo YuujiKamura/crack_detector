@@ -9,7 +9,7 @@ class TransformController:
         self.original_image = None
         self.dragging_point_index = None
 
-    def set_original_image(self, image):
+    def set_selected_image(self, image):
         self.original_image = image.copy()
 
     def select_points(self, cv2, event, x, y, flags, image_data):
@@ -37,14 +37,17 @@ class TransformController:
             self.dragging_point_index = None
 
     def draw_points_and_lines(self, cv2, image_data):
+        c_white = (255,255,255)
+        c_red = (0,0,255)
+
         if image_data is not None:
             for point in self.points:
-                cv2.circle(image_data, point, 5, (0, 0, 255), -1)
+                cv2.circle(image_data, point, 5, c_red, -1)
             if len(self.points) > 1:
                 for i in range(len(self.points) - 1):
-                    cv2.line(image_data, self.points[i], self.points[i + 1], (0, 0, 255), 1)
+                    cv2.line(image_data, self.points[i], self.points[i + 1], c_white, 1)
             if len(self.points) == 4:
-                cv2.line(image_data, self.points[-1], self.points[0], (0, 0, 255), 1)  # 4点目と1点目を結ぶ
+                cv2.line(image_data, self.points[-1], self.points[0], c_white, 1)  # 4点目と1点目を結ぶ
 
     def get_nearest_point_index(self, x, y, threshold=10):
         for i, (px, py) in enumerate(self.points):

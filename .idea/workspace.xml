@@ -4,14 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f5bc95a-a583-440f-93d1-93524ab48c0b" name="Changes" comment="reset rect fix">
+    <list default="true" id="1f5bc95a-a583-440f-93d1-93524ab48c0b" name="Changes" comment="images..">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crack_detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/crack_detector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/draw_grid/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/draw_grid/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/draw_grid/draw_grid.py" beforeDir="false" afterPath="$PROJECT_DIR$/draw_grid/draw_grid.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/draw_grid/toggle_highlight.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/grid_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/grid_controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transformer/initial_perspective_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformer/initial_perspective_transform.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transformer/update_vertical_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformer/update_vertical_transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transform_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/transform_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transformer/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformer/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transformer/initial_perspective_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformer/perspective_transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transformer/update_vertical_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformer/vertical_transform.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/undistort.py" beforeDir="false" afterPath="$PROJECT_DIR$/undistort.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/select_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/select_file.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,9 +34,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2hqlSF4SpgVPRn9eojiLls3wxUi" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -90,7 +96,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718369406145</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="images..">
+      <option name="closed" value="true" />
+      <created>1718373843177</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1718373843177</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -120,6 +134,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="initial commit" />
     <MESSAGE value="reset rect fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="reset rect fix" />
+    <MESSAGE value="images.." />
+    <option name="LAST_COMMIT_MESSAGE" value="images.." />
   </component>
 </project>

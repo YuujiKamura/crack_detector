@@ -1,6 +1,6 @@
 from PIL import Image
-from transformer import update_vertical_transform
-from draw_grid import draw_grid, toggle_highlight as draw_grid_toggle_highlight
+from transformer import vertical_transform
+from draw_grid import draw_grid
 
 class GridController:
     def __init__(self):
@@ -8,10 +8,11 @@ class GridController:
         self.is_drawing = False
         self.last_cell = None
 
-        self.final_dst = None
         self.original_image = None
         self.transformed_image = None
         self.cracked_image = None
+        self.final_image = None
+
         self.images = {}
 
         self.width = 500
@@ -22,16 +23,16 @@ class GridController:
         self.points = []
 
     def set_final_dst(self, dst, stage="default"):
-        self.final_dst = dst
+        self.final_image = dst
         self.images[stage] = dst
 
     def get_final_dst(self):
-        return self.final_dst
+        return self.final_image
 
     def get_image_by_stage(self, stage):
         return self.images.get(stage, None)
 
-    def set_image_by_stage(self, stage, image):
+    def set_image(self, stage, image):
         self.images[stage] = image
 
     def get_width_height(self):
@@ -56,12 +57,13 @@ class GridController:
         self.font_scale = scale
 
     def update_slider(self, cv2, value):
-        self.final_dst = update_vertical_transform(cv2, value, self.get_image_by_stage("original").copy(), self.width, self.height, self.grid_size, self.line_thickness, self.font_scale, draw_grid)
-        draw_grid( cv2, self.final_dst, self.grid_size, self.line_thickness, self.font_scale)
-        self.set_final_dst(self.final_dst, stage="vertical_transformed")
-        cv2.imshow('Transformed', self.final_dst)
-        # ウィンドウのサイズを画像のサイズに合わせて変更
-        cv2.resizeWindow('Transformed', self.final_dst.shape[1], self.final_dst.shape[0])
+
+        self.transformed_image = vertical_transform(cv2, value, self.get_image_by_stage("original").copy(), self.width, self.height)
+
+        self.final_image = draw_grid(cv2, self.transformed_image, self.grid_size, self.line_thickness, self.font_scale)
+
+        self.set_final_dst(self.final_image, stage="final")
+        cv2.imshow('Transformed', self.final_image)
 
     def update_line_thickness(self, cv2, value):
         self.line_thickness = int(value)
@@ -81,18 +83,17 @@ class GridController:
         elif self.transformed_image is not None:
             img_copy = self.transformed_image.copy()
         else:
-            img_copy = self.final_dst.copy()
+            img_copy = self.final_image.copy()
 
-        draw_grid(cv2, img_copy, self.grid_size, self.line_thickness, self.font_scale)
-        cv2.imshow('Transformed', img_copy)
+        return draw_grid(cv2, img_copy, self.grid_size, self.line_thickness, self.font_scale)
 
     def copy_button_click(self, cv2, copy_image_to_clipboard, slider):
-        if self.final_dst is not None:
+        if self.final_image is not None:
             width, height = self.get_width_height()
             trimmed_height = int(height * (1.0 + (slider.get() - 50) / 100.0))
             if trimmed_height > height:
                 trimmed_height = height
-            trimmed_dst = self.final_dst[:trimmed_height, :]
+            trimmed_dst = self.final_image[:trimmed_height, :]
 
             # グリッドを描画
             grid_img = trimmed_dst.copy()
@@ -101,6 +102,3 @@ class GridController:
             img_pil = Image.fromarray(cv2.cvtColor(grid_img, cv2.COLOR_BGR2RGB))
             copy_image_to_clipboard(img_pil)
             print("変換結果がクリップボードにコピーされました。")
-
-    def toggle_highlight(self, cv2, event, x, y, flags, param):
-        draw_grid_toggle_highlight(cv2, event, x, y, flags, param, self.grid_size, self.line_thickness)

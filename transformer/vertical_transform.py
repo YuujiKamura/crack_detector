@@ -1,8 +1,8 @@
 import numpy as np
 
-def update_vertical_transform( cv2, weight, initial_dst, width, height, grid_size, line_thickness, font_scale, draw_grid):
-    weight = float(weight) / 100.0
-    scale_factor = 1.0 + (weight - 0.5)
+def vertical_transform(cv2, weight, initial_dst, width, height):
+
+    scale_factor = float(weight) * 0.1
 
     final_dst = cv2.resize(initial_dst, (width, int(height * scale_factor)))
     if final_dst.shape[0] > height:
@@ -10,6 +10,9 @@ def update_vertical_transform( cv2, weight, initial_dst, width, height, grid_siz
     else:
         padding = np.zeros((height - final_dst.shape[0], width, 3), dtype=np.uint8)
         final_dst = np.vstack((final_dst, padding))
+
+
+    cv2.resizeWindow("Transformed", width, int( height*scale_factor ) )
 
     final_dst_copy = final_dst.copy()
 

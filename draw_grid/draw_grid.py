@@ -3,11 +3,15 @@ import cv2
 def draw_grid(cv2, img, grid_size, line_thickness, font_scale):
     if line_thickness == 0: return
 
-    height, width = img.shape[:2]
+    img_copy = img.copy()
+
+    height, width = img_copy.shape[:2]
     for i in range(0, width, grid_size):
-        cv2.line(img, (i, 0), (i, height), (0, 165, 255), line_thickness)
+        cv2.line(img_copy, (i, 0), (i, height), (0, 165, 255), line_thickness)
     for j in range(0, height, grid_size):
-        cv2.line(img, (0, j), (width, j), (0, 165, 255), line_thickness)
+        cv2.line(img_copy, (0, j), (width, j), (0, 165, 255), line_thickness)
+
+    return img_copy
 
 def update_cell(cv2, img, x, y, grid_size, line_thickness, font_scale, state):
     # セルの状態を更新するロジック

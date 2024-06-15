@@ -17,23 +17,18 @@ def create_settings_window(gc, cv2, copy_image_to_clipboard):
     frame.pack(pady=10, padx=10)
 
     gc.slider = add_labeled_slider(
-        frame, "Vertical Transform", 0, 100, HORIZONTAL, 400,
-        lambda val: gc.update_slider(cv2, val), 50, 0
+        frame, "Vertical Transform", 1, 200, HORIZONTAL, 400,
+        lambda val: gc.update_slider(cv2, val), 20, 0
     )
 
     gc.grid_slider = add_labeled_slider(
         frame, "Grid Size", 10, 100, HORIZONTAL, 400,
-        lambda val: gc.update_grid_size(cv2, val), 50, 1
+        lambda val: gc.update_grid_size(cv2, val), 90, 1
     )
 
     gc.line_thickness_slider = add_labeled_slider(
         frame, "Line Thickness", 0, 10, HORIZONTAL, 400,
         lambda val: gc.update_line_thickness(cv2, val), 1, 2
-    )
-
-    gc.font_scale_slider = add_labeled_slider(
-        frame, "Font Scale", 0.1, 1.0, HORIZONTAL, 400,
-        lambda val: gc.update_font_scale(cv2, val), 0.5, 3, 0.1
     )
 
     copy_button = Button(root, text="Copy to Clipboard", command=lambda: gc.copy_button_click(cv2, copy_image_to_clipboard, gc.slider))
@@ -51,6 +46,8 @@ def detect_and_update_cracks(gc, cv2):
     threshold1 = 130
     threshold2 = 150
 
-    cracked_image = detect_cracks(gc.get_image_by_stage("vertical_transformed").copy(), method, threshold1, threshold2)
-    gc.set_final_dst(cracked_image, stage="cracked")
+    cracked_image = detect_cracks(gc.transformed_image.copy(), method, threshold1, threshold2)
+    gc.cracked_image = cracked_image
+
+    gc.set_final_dst( gc.draw_grid(cv2), stage="cracked")
     cv2.imshow('Transformed', gc.get_final_dst())

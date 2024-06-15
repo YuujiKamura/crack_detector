@@ -38,15 +38,15 @@ def detect_cracks(image, method='canny', threshold1=100, threshold2=200, clip_li
         area = cv2.contourArea(contour)
         if area > 10:
             cv2.drawContours(image, [contour], -1, (0, 150, 255), 1)
-            crack_area += area
+            crack_area += area * 10
 
     total_area = image.shape[0] * image.shape[1]
     crack_percentage = (crack_area / total_area) * 100
 
     # クラック面積の割合を画像に描画
-    text = f"Crack area: {crack_percentage:.1f}%"
+    text = f" total_area: {total_area:.1f} crack_area: {crack_area:.1f} / {crack_percentage:.1f}%"
     font = cv2.FONT_HERSHEY_SIMPLEX
-    font_scale = 1
+    font_scale = 0.5
     font_thickness = 2
     text_size, _ = cv2.getTextSize(text, font, font_scale, font_thickness)
     text_x = 10

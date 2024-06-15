@@ -8,23 +8,17 @@ def main():
     gc = GridController()
     tc = TransformController()
 
-    image_path = select_file()
-    if not image_path:
-        print("画像が選択されませんでした。")
-        return
+    success, img = select_file()
+    if not success:
+        print("画像が選択されないか、読み込まれませんでした。")
 
-    img = cv2.imread(image_path)
-    if img is None:
-        print(f"画像が読み込まれませんでした。パスを確認してください: {image_path}")
-        return
-
-    img_copy = img.copy()
-    tc.set_original_image(img_copy)  # 元の画像を設定
+    img_selected = img.copy()
+    tc.set_selected_image(img_selected)  # 元の画像を設定
 
     cv2.namedWindow('image')
-    cv2.setMouseCallback('image', lambda event, x, y, flags, param=img_copy: tc.select_points(cv2, event, x, y, flags, img_copy))
+    cv2.setMouseCallback('image', lambda event, x, y, flags, param=img_selected: tc.select_points(cv2, event, x, y, flags, img_selected))
 
-    cv2.imshow('image', img_copy)
+    cv2.imshow('image', img_selected)
     print("画像上で4つのポイントをクリックしてください（左上、右上、右下、左下の順序で）")
     cv2.waitKey(0)
 
@@ -40,12 +34,13 @@ def main():
 
     gc.set_final_dst(initial_dst)
     gc.original_image = initial_dst.copy()  # オリジナルの画像を保持
-    gc.set_image_by_stage("original", initial_dst.copy())  # 初期変換後の画像を保存
+    gc.set_image("original", initial_dst.copy())  # 初期変換後の画像を保存
 
-    root = create_settings_window(gc, cv2, copy_image_to_clipboard)
 
     cv2.namedWindow('Transformed')
     cv2.imshow('Transformed', gc.get_final_dst())
+
+    root = create_settings_window(gc, cv2, copy_image_to_clipboard)
 
     root.mainloop()
 
