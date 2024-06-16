@@ -15,8 +15,8 @@ class GridController:
 
         self.images = {}
 
-        self.width = 500
-        self.height = 1000
+        self.width = 1000
+        self.height = 2000
         self.grid_size = 50
         self.line_thickness = 1
         self.font_scale = 0.5

@@ -3,8 +3,8 @@ import numpy as np
 
 def detect_and_update_image(gc, cv2):
     method = "canny"  # edge detection method, could be configurable
-    threshold1 = 100
-    threshold2 = 200
+    threshold1 = 25
+    threshold2 = 50
 
     cracked_image = detect_cracks(gc.transformed_image.copy(), method, threshold1, threshold2, gc.clip_limit )
     gc.cracked_image = cracked_image
@@ -12,11 +12,25 @@ def detect_and_update_image(gc, cv2):
     gc.set_final_dst( gc.draw_grid(cv2), stage="cracked")
     cv2.imshow('Transformed', gc.get_final_dst())
 
-def enhance_contrast(image, clip_limit):
+def enhance_contrast(image, clip_limit, brightness_increase=50):
+    # 画像をグレースケールに変換
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # CLAHEオブジェクトを作成、clipLimitを高く設定
     clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(8, 8))
+
+    kernel_size = 5
+    # ガウシアンフィルタを適用してノイズを除去
+    blurred = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 0)
+
+    # CLAHEを適用してコントラストを強化
     enhanced = clahe.apply(gray)
-    return enhanced
+
+    # 明るさを上げる
+    brightened = cv2.add(enhanced, np.full(enhanced.shape, brightness_increase, dtype=enhanced.dtype))
+
+    # グレースケール画像を3次元に変換して返す
+    return cv2.cvtColor(blurred, cv2.COLOR_GRAY2BGR)
 
 def detect_edges(image, method='canny', threshold1=100, threshold2=200):
     if method == 'canny':

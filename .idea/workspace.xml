@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f5bc95a-a583-440f-93d1-93524ab48c0b" name="Changes" comment="clip image">
-      <change afterPath="$PROJECT_DIR$/chessboard.png" afterDir="false" />
+    <list default="true" id="1f5bc95a-a583-440f-93d1-93524ab48c0b" name="Changes" comment="some commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crack_detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/crack_detector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/grid_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/grid_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transform_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/transform_controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transformer/perspective_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformer/perspective_transform.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transformer/vertical_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformer/vertical_transform.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/undistort.py" beforeDir="false" afterPath="$PROJECT_DIR$/undistort.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/select_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/select_file.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +41,7 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Python.__init__.executor": "Run",
     "Python.crack_detector.executor": "Run",
+    "Python.perspective_transform.executor": "Run",
     "Python.settings_window.executor": "Run",
     "Python.transformer.executor": "Run",
     "Python.undistort.executor": "Run",
@@ -110,7 +105,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718412318564</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="some commit">
+      <option name="closed" value="true" />
+      <created>1718452069632</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1718452069632</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -142,6 +145,7 @@
     <MESSAGE value="reset rect fix" />
     <MESSAGE value="images.." />
     <MESSAGE value="clip image" />
-    <option name="LAST_COMMIT_MESSAGE" value="clip image" />
+    <MESSAGE value="some commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="some commit" />
   </component>
 </project>

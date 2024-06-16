@@ -7,34 +7,9 @@ def initial_perspective_transform(cv2, pts1, img, width, height):
 
     perspective_transformed = cv2.warpPerspective(img, M, (width, height))
 
-    # 縦方向の圧縮を適用
-    #compression_factor = 0.8 # 圧縮の強さを調整
-    #return apply_vertical_compression(cv2, perspective_transformed, compression_factor)
-
-    #stretch_factor = 0.0
-    #return apply_vertical_stretch(cv2, perspective_transformed, stretch_factor)
-
-    return enhance_contrast( perspective_transformed )
-
-def enhance_contrast(image, clip_limit=1, brightness_increase=50):
-    # 画像をグレースケールに変換
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # CLAHEオブジェクトを作成、clipLimitを高く設定
-    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(8, 8))
-
-    kernel_size = 5
-    # ガウシアンフィルタを適用してノイズを除去
-    blurred = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 0)
-
-    # CLAHEを適用してコントラストを強化
-    enhanced = clahe.apply(gray)
-
-    # 明るさを上げる
-    brightened = cv2.add(enhanced, np.full(enhanced.shape, brightness_increase, dtype=enhanced.dtype))
-
-    # グレースケール画像を3次元に変換して返す
-    return cv2.cvtColor(blurred, cv2.COLOR_GRAY2BGR)
+    # 縦方向の比率を変更（手前をほんの少し延ばして奥を縮める処理
+    stretch_factor = 0.2
+    return apply_vertical_stretch(cv2, perspective_transformed, stretch_factor)
 
 def apply_vertical_compression(cv2, img, compression_factor):
     height, width = img.shape[:2]
