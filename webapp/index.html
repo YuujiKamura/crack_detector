@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>クラック展開図</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: #16213e;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-stats {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* カメラビュー */
+        .camera-section {
+            position: relative;
+            background: #000;
+        }
+
+        #video {
+            width: 100%;
+            display: block;
+        }
+
+        #video.hidden {
+            display: none;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 16px;
+        }
+
+        .capture-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #e94560;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .capture-btn:active {
+            transform: scale(0.95);
+        }
+
+        .switch-camera-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            align-self: center;
+        }
+
+        /* グリッド選択 */
+        .grid-selector {
+            padding: 12px 16px;
+            background: #16213e;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .grid-selector label {
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .grid-btn {
+            padding: 8px 16px;
+            border: 1px solid #e94560;
+            background: transparent;
+            color: #fff;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .grid-btn.active {
+            background: #e94560;
+        }
+
+        /* 展開図 */
+        .map-section {
+            padding: 16px;
+        }
+
+        .map-section h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #888;
+        }
+
+        .crack-map {
+            display: grid;
+            gap: 4px;
+            background: #0f0f23;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .map-cell {
+            aspect-ratio: 1;
+            background: #252542;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .map-cell:hover {
+            background: #353562;
+        }
+
+        .map-cell.selected {
+            outline: 3px solid #e94560;
+        }
+
+        .map-cell.has-image {
+            background: transparent;
+        }
+
+        .map-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .map-cell .cell-label {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .map-cell .crack-info {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            font-size: 10px;
+            background: rgba(233, 69, 96, 0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .map-cell .placeholder {
+            color: #555;
+            font-size: 24px;
+        }
+
+        /* 処理中のキャンバス（非表示） */
+        #processCanvas {
+            display: none;
+        }
+
+        /* プレビューモーダル */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 200;
+            flex-direction: column;
+        }
+
+        .preview-modal.show {
+            display: flex;
+        }
+
+        .preview-header {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .preview-content img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .preview-actions {
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #e94560;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        /* 統計 */
+        .stats-bar {
+            padding: 12px 16px;
+            background: #16213e;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>クラック展開図</h1>
+        <div class="header-stats">
+            <span id="photoCount">0</span> / <span id="totalCells">9</span> 枚撮影
+        </div>
+    </div>
+
+    <div class="camera-section">
+        <video id="video" autoplay playsinline></video>
+        <div class="camera-overlay">
+            <button class="switch-camera-btn" id="switchCamera">↻</button>
+            <button class="capture-btn" id="captureBtn"></button>
+        </div>
+    </div>
+
+    <div class="grid-selector">
+        <label>グリッド:</label>
+        <button class="grid-btn active" data-grid="3">3×3</button>
+        <button class="grid-btn" data-grid="4">4×4</button>
+        <button class="grid-btn" data-grid="5">5×5</button>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-value" id="avgCrack">-</span>
+            <span class="stat-label">平均クラック率</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="maxCrack">-</span>
+            <span class="stat-label">最大クラック率</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="totalArea">-</span>
+            <span class="stat-label">総クラック面積</span>
+        </div>
+    </div>
+
+    <div class="map-section">
+        <h2>展開図（撮影位置をタップして選択）</h2>
+        <div class="crack-map" id="crackMap"></div>
+    </div>
+
+    <canvas id="processCanvas"></canvas>
+
+    <!-- プレビューモーダル -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-header">
+            <span>撮影プレビュー</span>
+            <button class="btn btn-secondary" id="closePreview">✕</button>
+        </div>
+        <div class="preview-content">
+            <img id="previewImage" src="" alt="preview">
+        </div>
+        <div class="preview-actions">
+            <button class="btn btn-secondary" id="retakeBtn">撮り直す</button>
+            <button class="btn btn-primary" id="saveBtn">この位置に保存</button>
+        </div>
+    </div>
+
+    <script>
+        // 状態管理
+        const state = {
+            gridSize: 3,
+            selectedCell: null,
+            cells: {},  // { "0-0": { original: dataUrl, processed: dataUrl, crackPercent: 0 } }
+            facingMode: 'environment',
+            stream: null,
+            capturedImage: null
+        };
+
+        // DOM要素
+        const video = document.getElementById('video');
+        const captureBtn = document.getElementById('captureBtn');
+        const switchCamera = document.getElementById('switchCamera');
+        const crackMap = document.getElementById('crackMap');
+        const processCanvas = document.getElementById('processCanvas');
+        const ctx = processCanvas.getContext('2d');
+        const previewModal = document.getElementById('previewModal');
+        const previewImage = document.getElementById('previewImage');
+
+        // カメラ初期化
+        async function initCamera() {
+            try {
+                if (state.stream) {
+                    state.stream.getTracks().forEach(track => track.stop());
+                }
+
+                state.stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: state.facingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
+
+                video.srcObject = state.stream;
+            } catch (err) {
+                console.error('カメラエラー:', err);
+                alert('カメラにアクセスできません');
+            }
+        }
+
+        // カメラ切り替え
+        switchCamera.addEventListener('click', () => {
+            state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
+            initCamera();
+        });
+
+        // グリッド生成
+        function createGrid() {
+            crackMap.innerHTML = '';
+            crackMap.style.gridTemplateColumns = `repeat(${state.gridSize}, 1fr)`;
+
+            document.getElementById('totalCells').textContent = state.gridSize * state.gridSize;
+
+            for (let row = 0; row < state.gridSize; row++) {
+                for (let col = 0; col < state.gridSize; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'map-cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+
+                    const key = `${row}-${col}`;
+                    const cellData = state.cells[key];
+
+                    if (cellData) {
+                        cell.classList.add('has-image');
+                        cell.innerHTML = `
+                            <img src="${cellData.processed}" alt="crack">
+                            <span class="cell-label">${row+1}-${col+1}</span>
+                            <span class="crack-info">${cellData.crackPercent.toFixed(1)}%</span>
+                        `;
+                    } else {
+                        cell.innerHTML = `
+                            <span class="placeholder">+</span>
+                            <span class="cell-label">${row+1}-${col+1}</span>
+                        `;
+                    }
+
+                    cell.addEventListener('click', () => selectCell(row, col));
+                    crackMap.appendChild(cell);
+                }
+            }
+
+            updateStats();
+        }
+
+        // セル選択
+        function selectCell(row, col) {
+            document.querySelectorAll('.map-cell').forEach(c => c.classList.remove('selected'));
+
+            const key = `${row}-${col}`;
+            state.selectedCell = key;
+
+            const cell = document.querySelector(`.map-cell[data-row="${row}"][data-col="${col}"]`);
+            cell.classList.add('selected');
+        }
+
+        // 撮影
+        captureBtn.addEventListener('click', () => {
+            if (!state.selectedCell) {
+                alert('先に展開図の位置を選択してください');
+                return;
+            }
+
+            // キャンバスに描画
+            processCanvas.width = video.videoWidth;
+            processCanvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+
+            state.capturedImage = processCanvas.toDataURL('image/jpeg', 0.8);
+            previewImage.src = state.capturedImage;
+            previewModal.classList.add('show');
+        });
+
+        // プレビュー閉じる
+        document.getElementById('closePreview').addEventListener('click', () => {
+            previewModal.classList.remove('show');
+        });
+
+        document.getElementById('retakeBtn').addEventListener('click', () => {
+            previewModal.classList.remove('show');
+        });
+
+        // 保存（クラック検出付き）
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const processed = detectCracks(processCanvas);
+
+            state.cells[state.selectedCell] = {
+                original: state.capturedImage,
+                processed: processed.imageData,
+                crackPercent: processed.crackPercent
+            };
+
+            previewModal.classList.remove('show');
+            createGrid();
+
+            // 次のセルを自動選択
+            autoSelectNextCell();
+        });
+
+        // クラック検出（簡易版）
+        function detectCracks(canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+
+            // グレースケール化 + エッジ検出（Sobel簡易版）
+            const gray = new Uint8Array(width * height);
+            const edges = new Uint8Array(width * height);
+
+            // グレースケール化
+            for (let i = 0; i < data.length; i += 4) {
+                gray[i / 4] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            }
+
+            // 簡易Sobelフィルタ
+            let crackPixels = 0;
+            const threshold = 30;
+
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    const idx = y * width + x;
+
+                    // Sobel X
+                    const gx =
+                        -gray[idx - width - 1] + gray[idx - width + 1] +
+                        -2 * gray[idx - 1] + 2 * gray[idx + 1] +
+                        -gray[idx + width - 1] + gray[idx + width + 1];
+
+                    // Sobel Y
+                    const gy =
+                        -gray[idx - width - 1] - 2 * gray[idx - width] - gray[idx - width + 1] +
+                        gray[idx + width - 1] + 2 * gray[idx + width] + gray[idx + width + 1];
+
+                    const magnitude = Math.sqrt(gx * gx + gy * gy);
+
+                    if (magnitude > threshold) {
+                        edges[idx] = 255;
+                        crackPixels++;
+                    }
+                }
+            }
+
+            // エッジを赤で描画
+            for (let i = 0; i < edges.length; i++) {
+                if (edges[i] === 255) {
+                    const pi = i * 4;
+                    data[pi] = 255;     // R
+                    data[pi + 1] = 50;  // G
+                    data[pi + 2] = 50;  // B
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+
+            const crackPercent = (crackPixels / (width * height)) * 100;
+
+            return {
+                imageData: canvas.toDataURL('image/jpeg', 0.8),
+                crackPercent: crackPercent
+            };
+        }
+
+        // 次のセルを自動選択
+        function autoSelectNextCell() {
+            for (let row = 0; row < state.gridSize; row++) {
+                for (let col = 0; col < state.gridSize; col++) {
+                    const key = `${row}-${col}`;
+                    if (!state.cells[key]) {
+                        selectCell(row, col);
+                        return;
+                    }
+                }
+            }
+        }
+
+        // 統計更新
+        function updateStats() {
+            const values = Object.values(state.cells);
+            const count = values.length;
+
+            document.getElementById('photoCount').textContent = count;
+
+            if (count === 0) {
+                document.getElementById('avgCrack').textContent = '-';
+                document.getElementById('maxCrack').textContent = '-';
+                document.getElementById('totalArea').textContent = '-';
+                return;
+            }
+
+            const percents = values.map(v => v.crackPercent);
+            const avg = percents.reduce((a, b) => a + b, 0) / count;
+            const max = Math.max(...percents);
+
+            document.getElementById('avgCrack').textContent = avg.toFixed(1) + '%';
+            document.getElementById('maxCrack').textContent = max.toFixed(1) + '%';
+            document.getElementById('totalArea').textContent = count + '区画';
+        }
+
+        // グリッドサイズ変更
+        document.querySelectorAll('.grid-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.gridSize = parseInt(btn.dataset.grid);
+                state.cells = {};  // リセット
+                state.selectedCell = null;
+                createGrid();
+            });
+        });
+
+        // 初期化
+        initCamera();
+        createGrid();
+        selectCell(0, 0);  // 最初のセルを選択
+    </script>
+</body>
+</html>
