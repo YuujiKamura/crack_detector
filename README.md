@@ -1,5 +1,9 @@
 # Crack Detector
 
+[![GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-blue)](https://yuujikamura.github.io/crack_detector/)
+
+**[🌐 Webアプリを試す](https://yuujikamura.github.io/crack_detector/)**
+
 建物やインフラのクラック（ひび割れ）を検出・マッピングするためのツール群です。
 
 ## 機能
