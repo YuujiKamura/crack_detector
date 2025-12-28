@@ -286,6 +286,269 @@
             font-size: 11px;
             color: #888;
         }
+
+        /* データ管理セクション */
+        .data-section {
+            padding: 16px;
+            background: #1a1a2e;
+        }
+
+        .data-section h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-section h2 .toggle-btn {
+            background: #252542;
+            border: none;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* スプレッドシート風テーブル */
+        .spreadsheet-container {
+            overflow-x: auto;
+            background: #0f0f23;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .spreadsheet {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 600px;
+        }
+
+        .spreadsheet th {
+            background: #16213e;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #252542;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+
+        .spreadsheet th.col-header {
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .spreadsheet td {
+            padding: 8px;
+            border-bottom: 1px solid #252542;
+            vertical-align: middle;
+        }
+
+        .spreadsheet tr:hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+
+        .spreadsheet .row-header {
+            background: #16213e;
+            font-weight: 600;
+            text-align: center;
+            width: 40px;
+        }
+
+        .spreadsheet .cell-input {
+            width: 100%;
+            background: #252542;
+            border: 1px solid transparent;
+            color: #fff;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+
+        .spreadsheet .cell-input:focus {
+            outline: none;
+            border-color: #e94560;
+            background: #353562;
+        }
+
+        .spreadsheet .cell-input:hover:not(:focus) {
+            background: #353562;
+        }
+
+        .spreadsheet .cell-readonly {
+            background: transparent;
+            color: #888;
+            cursor: default;
+        }
+
+        .spreadsheet .cell-crack {
+            text-align: right;
+            font-family: monospace;
+        }
+
+        .spreadsheet .cell-crack.high {
+            color: #e94560;
+            font-weight: bold;
+        }
+
+        .spreadsheet .cell-crack.medium {
+            color: #ffa726;
+        }
+
+        .spreadsheet .cell-crack.low {
+            color: #66bb6a;
+        }
+
+        .spreadsheet .cell-status {
+            text-align: center;
+        }
+
+        .spreadsheet .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+
+        .spreadsheet .status-badge.captured {
+            background: rgba(102, 187, 106, 0.2);
+            color: #66bb6a;
+        }
+
+        .spreadsheet .status-badge.empty {
+            background: rgba(136, 136, 136, 0.2);
+            color: #888;
+        }
+
+        .spreadsheet .thumbnail {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .spreadsheet .thumbnail:hover {
+            transform: scale(1.5);
+            z-index: 10;
+            position: relative;
+        }
+
+        .spreadsheet .no-image {
+            color: #555;
+            font-size: 11px;
+        }
+
+        /* CSV操作ボタン */
+        .csv-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .csv-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .csv-btn-export {
+            background: #e94560;
+            color: #fff;
+        }
+
+        .csv-btn-export:hover {
+            background: #d13a55;
+        }
+
+        .csv-btn-import {
+            background: #16213e;
+            color: #fff;
+            border: 1px solid #e94560;
+        }
+
+        .csv-btn-import:hover {
+            background: #252542;
+        }
+
+        .csv-btn-clear {
+            background: #333;
+            color: #fff;
+        }
+
+        .csv-btn-clear:hover {
+            background: #444;
+        }
+
+        #csvFileInput {
+            display: none;
+        }
+
+        /* サマリーカード */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .summary-card {
+            background: #16213e;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .summary-card .label {
+            font-size: 11px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* 条件付き書式ヘルプ */
+        .format-legend {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: #888;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .format-legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .format-legend .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .format-legend .dot.high { background: #e94560; }
+        .format-legend .dot.medium { background: #ffa726; }
+        .format-legend .dot.low { background: #66bb6a; }
     </style>
 </head>
 <body>
@@ -331,6 +594,78 @@
         <div class="crack-map" id="crackMap"></div>
     </div>
 
+    <!-- データ管理セクション（スプレッドシート風UI） -->
+    <div class="data-section">
+        <h2>
+            データ管理
+            <button class="toggle-btn" id="toggleSpreadsheet">表示/非表示</button>
+        </h2>
+
+        <div id="spreadsheetArea">
+            <!-- サマリーカード -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="value" id="summaryTotal">0</div>
+                    <div class="label">撮影済みセル</div>
+                </div>
+                <div class="summary-card">
+                    <div class="value" id="summaryAvg">-</div>
+                    <div class="label">平均クラック率</div>
+                </div>
+                <div class="summary-card">
+                    <div class="value" id="summaryMax">-</div>
+                    <div class="label">最大クラック率</div>
+                </div>
+                <div class="summary-card">
+                    <div class="value" id="summaryMin">-</div>
+                    <div class="label">最小クラック率</div>
+                </div>
+            </div>
+
+            <!-- スプレッドシート -->
+            <div class="spreadsheet-container">
+                <table class="spreadsheet" id="dataSpreadsheet">
+                    <thead>
+                        <tr>
+                            <th class="col-header">#</th>
+                            <th>セル位置</th>
+                            <th>状態</th>
+                            <th>プレビュー</th>
+                            <th>クラック率 (%)</th>
+                            <th>評価</th>
+                            <th>メモ</th>
+                            <th>撮影日時</th>
+                        </tr>
+                    </thead>
+                    <tbody id="spreadsheetBody">
+                        <!-- 動的に生成 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 凡例 -->
+            <div class="format-legend">
+                <span><div class="dot high"></div> 高リスク (5%以上)</span>
+                <span><div class="dot medium"></div> 中リスク (2-5%)</span>
+                <span><div class="dot low"></div> 低リスク (2%未満)</span>
+            </div>
+
+            <!-- CSV操作ボタン -->
+            <div class="csv-actions">
+                <button class="csv-btn csv-btn-export" id="exportCsvBtn">
+                    📥 CSVエクスポート
+                </button>
+                <button class="csv-btn csv-btn-import" id="importCsvBtn">
+                    📤 CSVインポート
+                </button>
+                <button class="csv-btn csv-btn-clear" id="clearDataBtn">
+                    🗑️ データクリア
+                </button>
+                <input type="file" id="csvFileInput" accept=".csv">
+            </div>
+        </div>
+    </div>
+
     <canvas id="processCanvas"></canvas>
 
     <!-- プレビューモーダル -->
@@ -353,10 +688,11 @@
         const state = {
             gridSize: 3,
             selectedCell: null,
-            cells: {},  // { "0-0": { original: dataUrl, processed: dataUrl, crackPercent: 0 } }
+            cells: {},  // { "0-0": { original: dataUrl, processed: dataUrl, crackPercent: 0, timestamp: Date, note: "", rating: "" } }
             facingMode: 'environment',
             stream: null,
-            capturedImage: null
+            capturedImage: null,
+            spreadsheetVisible: true
         };
 
         // DOM要素
@@ -480,15 +816,26 @@
             state.cells[state.selectedCell] = {
                 original: state.capturedImage,
                 processed: processed.imageData,
-                crackPercent: processed.crackPercent
+                crackPercent: processed.crackPercent,
+                timestamp: new Date().toISOString(),
+                note: '',
+                rating: getRatingFromPercent(processed.crackPercent)
             };
 
             previewModal.classList.remove('show');
             createGrid();
+            updateSpreadsheet();
 
             // 次のセルを自動選択
             autoSelectNextCell();
         });
+
+        // クラック率から評価を取得
+        function getRatingFromPercent(percent) {
+            if (percent >= 5) return '要対応';
+            if (percent >= 2) return '経過観察';
+            return '良好';
+        }
 
         // クラック検出（簡易版）
         function detectCracks(canvas) {
@@ -599,12 +946,315 @@
                 state.cells = {};  // リセット
                 state.selectedCell = null;
                 createGrid();
+                updateSpreadsheet();
             });
+        });
+
+        // ========== スプレッドシート機能 ==========
+
+        // スプレッドシート表示/非表示トグル
+        document.getElementById('toggleSpreadsheet').addEventListener('click', () => {
+            state.spreadsheetVisible = !state.spreadsheetVisible;
+            document.getElementById('spreadsheetArea').style.display =
+                state.spreadsheetVisible ? 'block' : 'none';
+        });
+
+        // スプレッドシート更新
+        function updateSpreadsheet() {
+            const tbody = document.getElementById('spreadsheetBody');
+            tbody.innerHTML = '';
+
+            const totalCells = state.gridSize * state.gridSize;
+            let rowNum = 1;
+
+            // 全セルをループ
+            for (let row = 0; row < state.gridSize; row++) {
+                for (let col = 0; col < state.gridSize; col++) {
+                    const key = `${row}-${col}`;
+                    const cellData = state.cells[key];
+                    const tr = document.createElement('tr');
+
+                    // 行番号
+                    const tdNum = document.createElement('td');
+                    tdNum.className = 'row-header';
+                    tdNum.textContent = rowNum++;
+                    tr.appendChild(tdNum);
+
+                    // セル位置
+                    const tdPos = document.createElement('td');
+                    tdPos.textContent = `${row + 1}-${col + 1}`;
+                    tr.appendChild(tdPos);
+
+                    // 状態
+                    const tdStatus = document.createElement('td');
+                    tdStatus.className = 'cell-status';
+                    if (cellData) {
+                        tdStatus.innerHTML = '<span class="status-badge captured">撮影済</span>';
+                    } else {
+                        tdStatus.innerHTML = '<span class="status-badge empty">未撮影</span>';
+                    }
+                    tr.appendChild(tdStatus);
+
+                    // プレビュー
+                    const tdPreview = document.createElement('td');
+                    if (cellData && cellData.processed) {
+                        const img = document.createElement('img');
+                        img.src = cellData.processed;
+                        img.className = 'thumbnail';
+                        img.addEventListener('click', () => showImagePreview(cellData.processed));
+                        tdPreview.appendChild(img);
+                    } else {
+                        tdPreview.innerHTML = '<span class="no-image">-</span>';
+                    }
+                    tr.appendChild(tdPreview);
+
+                    // クラック率
+                    const tdCrack = document.createElement('td');
+                    tdCrack.className = 'cell-crack';
+                    if (cellData) {
+                        const percent = cellData.crackPercent;
+                        tdCrack.textContent = percent.toFixed(2);
+                        if (percent >= 5) tdCrack.classList.add('high');
+                        else if (percent >= 2) tdCrack.classList.add('medium');
+                        else tdCrack.classList.add('low');
+                    } else {
+                        tdCrack.textContent = '-';
+                    }
+                    tr.appendChild(tdCrack);
+
+                    // 評価（編集可能）
+                    const tdRating = document.createElement('td');
+                    const ratingSelect = document.createElement('select');
+                    ratingSelect.className = 'cell-input';
+                    ratingSelect.innerHTML = `
+                        <option value="">-</option>
+                        <option value="良好">良好</option>
+                        <option value="経過観察">経過観察</option>
+                        <option value="要対応">要対応</option>
+                    `;
+                    ratingSelect.value = cellData?.rating || '';
+                    ratingSelect.addEventListener('change', () => {
+                        if (state.cells[key]) {
+                            state.cells[key].rating = ratingSelect.value;
+                        }
+                    });
+                    tdRating.appendChild(ratingSelect);
+                    tr.appendChild(tdRating);
+
+                    // メモ（編集可能）
+                    const tdNote = document.createElement('td');
+                    const noteInput = document.createElement('input');
+                    noteInput.type = 'text';
+                    noteInput.className = 'cell-input';
+                    noteInput.placeholder = 'メモを入力...';
+                    noteInput.value = cellData?.note || '';
+                    noteInput.addEventListener('change', () => {
+                        if (state.cells[key]) {
+                            state.cells[key].note = noteInput.value;
+                        }
+                    });
+                    tdNote.appendChild(noteInput);
+                    tr.appendChild(tdNote);
+
+                    // 撮影日時
+                    const tdTime = document.createElement('td');
+                    if (cellData && cellData.timestamp) {
+                        const date = new Date(cellData.timestamp);
+                        tdTime.textContent = date.toLocaleString('ja-JP', {
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    } else {
+                        tdTime.textContent = '-';
+                    }
+                    tr.appendChild(tdTime);
+
+                    tbody.appendChild(tr);
+                }
+            }
+
+            // サマリー更新
+            updateSpreadsheetSummary();
+        }
+
+        // サマリー更新
+        function updateSpreadsheetSummary() {
+            const values = Object.values(state.cells);
+            const count = values.length;
+
+            document.getElementById('summaryTotal').textContent = count;
+
+            if (count === 0) {
+                document.getElementById('summaryAvg').textContent = '-';
+                document.getElementById('summaryMax').textContent = '-';
+                document.getElementById('summaryMin').textContent = '-';
+                return;
+            }
+
+            const percents = values.map(v => v.crackPercent);
+            const avg = percents.reduce((a, b) => a + b, 0) / count;
+            const max = Math.max(...percents);
+            const min = Math.min(...percents);
+
+            document.getElementById('summaryAvg').textContent = avg.toFixed(1) + '%';
+            document.getElementById('summaryMax').textContent = max.toFixed(1) + '%';
+            document.getElementById('summaryMin').textContent = min.toFixed(1) + '%';
+        }
+
+        // 画像プレビュー表示
+        function showImagePreview(imageUrl) {
+            previewImage.src = imageUrl;
+            previewModal.classList.add('show');
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('retakeBtn').textContent = '閉じる';
+        }
+
+        // ========== CSV機能 ==========
+
+        // CSVエクスポート
+        document.getElementById('exportCsvBtn').addEventListener('click', () => {
+            const rows = [];
+
+            // ヘッダー行
+            rows.push(['セル位置', '行', '列', '状態', 'クラック率(%)', '評価', 'メモ', '撮影日時'].join(','));
+
+            // データ行
+            for (let row = 0; row < state.gridSize; row++) {
+                for (let col = 0; col < state.gridSize; col++) {
+                    const key = `${row}-${col}`;
+                    const cellData = state.cells[key];
+
+                    const rowData = [
+                        `${row + 1}-${col + 1}`,
+                        row + 1,
+                        col + 1,
+                        cellData ? '撮影済' : '未撮影',
+                        cellData ? cellData.crackPercent.toFixed(2) : '',
+                        cellData?.rating || '',
+                        `"${(cellData?.note || '').replace(/"/g, '""')}"`,
+                        cellData?.timestamp ? new Date(cellData.timestamp).toLocaleString('ja-JP') : ''
+                    ];
+
+                    rows.push(rowData.join(','));
+                }
+            }
+
+            // BOM付きUTF-8でCSVを生成
+            const bom = '\uFEFF';
+            const csvContent = bom + rows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+            // ダウンロード
+            const link = document.createElement('a');
+            const timestamp = new Date().toISOString().slice(0, 10);
+            link.download = `crack_data_${timestamp}.csv`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        });
+
+        // CSVインポート
+        document.getElementById('importCsvBtn').addEventListener('click', () => {
+            document.getElementById('csvFileInput').click();
+        });
+
+        document.getElementById('csvFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const text = event.target.result;
+                    const lines = text.split('\n').filter(line => line.trim());
+
+                    // ヘッダーをスキップ
+                    for (let i = 1; i < lines.length; i++) {
+                        const cols = parseCSVLine(lines[i]);
+                        if (cols.length < 6) continue;
+
+                        const position = cols[0]; // "1-1" format
+                        const [rowStr, colStr] = position.split('-');
+                        const row = parseInt(rowStr) - 1;
+                        const col = parseInt(colStr) - 1;
+                        const key = `${row}-${col}`;
+
+                        // 既存データがある場合のみ更新（画像データは保持）
+                        if (state.cells[key]) {
+                            state.cells[key].rating = cols[5] || state.cells[key].rating;
+                            state.cells[key].note = cols[6]?.replace(/^"|"$/g, '').replace(/""/g, '"') || '';
+                        }
+                    }
+
+                    updateSpreadsheet();
+                    alert('CSVデータをインポートしました');
+                } catch (err) {
+                    console.error('CSV parse error:', err);
+                    alert('CSVの読み込みに失敗しました');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = ''; // リセット
+        });
+
+        // CSV行をパース（引用符対応）
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+
+                if (inQuotes) {
+                    if (char === '"') {
+                        if (line[i + 1] === '"') {
+                            current += '"';
+                            i++;
+                        } else {
+                            inQuotes = false;
+                        }
+                    } else {
+                        current += char;
+                    }
+                } else {
+                    if (char === '"') {
+                        inQuotes = true;
+                    } else if (char === ',') {
+                        result.push(current);
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+            }
+            result.push(current);
+            return result;
+        }
+
+        // データクリア
+        document.getElementById('clearDataBtn').addEventListener('click', () => {
+            if (confirm('すべてのデータをクリアしますか？')) {
+                state.cells = {};
+                state.selectedCell = null;
+                createGrid();
+                updateSpreadsheet();
+                selectCell(0, 0);
+            }
+        });
+
+        // プレビューモーダルのリセット
+        document.getElementById('retakeBtn').addEventListener('click', () => {
+            document.getElementById('saveBtn').style.display = '';
+            document.getElementById('retakeBtn').textContent = '撮り直す';
         });
 
         // 初期化
         initCamera();
         createGrid();
+        updateSpreadsheet();
         selectCell(0, 0);  // 最初のセルを選択
     </script>
 </body>
