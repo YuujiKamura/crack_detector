@@ -689,6 +689,7 @@
 
             <div class="csv-actions">
                 <button class="csv-btn csv-btn-export" id="exportCsvBtn">📥 CSVエクスポート</button>
+                <button class="csv-btn csv-btn-export" id="exportDxfBtn" style="background:#4a90d9;">📐 DXFエクスポート</button>
                 <button class="csv-btn csv-btn-import" id="importCsvBtn">📤 CSVインポート</button>
                 <button class="csv-btn csv-btn-clear" id="clearDataBtn">🗑️ データクリア</button>
                 <input type="file" id="csvFileInput" accept=".csv">
@@ -907,8 +908,9 @@
             document.getElementById('retakeBtn').addEventListener('click', closePreview);
             document.getElementById('saveBtn').addEventListener('click', saveImage);
 
-            // CSV操作
+            // CSV/DXF操作
             document.getElementById('exportCsvBtn').addEventListener('click', exportCSV);
+            document.getElementById('exportDxfBtn').addEventListener('click', exportDXF);
             document.getElementById('importCsvBtn').addEventListener('click', () => document.getElementById('csvFileInput').click());
             document.getElementById('csvFileInput').addEventListener('change', importCSV);
             document.getElementById('clearDataBtn').addEventListener('click', clearData);
@@ -1479,6 +1481,188 @@ JSONのみを返し、他の説明は不要です。`
             link.download = `crack_data_${new Date().toISOString().slice(0, 10)}.csv`;
             link.href = URL.createObjectURL(blob);
             link.click();
+        }
+
+        // ========== DXF機能 ==========
+        function exportDXF() {
+            const cellSize = 1000; // 1セル = 1000mm (1m)
+            const totalSize = cellSize * state.gridSize;
+            const textHeight = cellSize * 0.08;
+            const smallTextHeight = cellSize * 0.05;
+
+            let dxf = '';
+
+            // ========== HEADER SECTION ==========
+            dxf += '0\nSECTION\n2\nHEADER\n';
+            dxf += '9\n$ACADVER\n1\nAC1015\n'; // AutoCAD 2000
+            dxf += '9\n$INSUNITS\n70\n4\n'; // mm
+            dxf += `9\n$EXTMIN\n10\n0\n20\n0\n30\n0\n`;
+            dxf += `9\n$EXTMAX\n10\n${totalSize}\n20\n${totalSize}\n30\n0\n`;
+            dxf += '0\nENDSEC\n';
+
+            // ========== TABLES SECTION ==========
+            dxf += '0\nSECTION\n2\nTABLES\n';
+
+            // Layer table
+            dxf += '0\nTABLE\n2\nLAYER\n70\n5\n';
+
+            // Layer: GRID (白)
+            dxf += '0\nLAYER\n2\nGRID\n70\n0\n62\n7\n6\nContinuous\n';
+            // Layer: CRACK_LOW (緑)
+            dxf += '0\nLAYER\n2\nCRACK_LOW\n70\n0\n62\n3\n6\nContinuous\n';
+            // Layer: CRACK_MEDIUM (黄)
+            dxf += '0\nLAYER\n2\nCRACK_MEDIUM\n70\n0\n62\n2\n6\nContinuous\n';
+            // Layer: CRACK_HIGH (赤)
+            dxf += '0\nLAYER\n2\nCRACK_HIGH\n70\n0\n62\n1\n6\nContinuous\n';
+            // Layer: TEXT (白)
+            dxf += '0\nLAYER\n2\nTEXT\n70\n0\n62\n7\n6\nContinuous\n';
+            // Layer: ANNOTATION (シアン)
+            dxf += '0\nLAYER\n2\nANNOTATION\n70\n0\n62\n4\n6\nContinuous\n';
+
+            dxf += '0\nENDTAB\n';
+
+            // Style table
+            dxf += '0\nTABLE\n2\nSTYLE\n70\n1\n';
+            dxf += '0\nSTYLE\n2\nSTANDARD\n70\n0\n40\n0\n41\n1\n50\n0\n71\n0\n42\n0.2\n3\ntxt\n4\n\n';
+            dxf += '0\nENDTAB\n';
+
+            dxf += '0\nENDSEC\n';
+
+            // ========== ENTITIES SECTION ==========
+            dxf += '0\nSECTION\n2\nENTITIES\n';
+
+            // グリッド線を描画
+            for (let row = 0; row <= state.gridSize; row++) {
+                const y = row * cellSize;
+                // 横線
+                dxf += `0\nLINE\n8\nGRID\n`;
+                dxf += `10\n0\n20\n${y}\n30\n0\n`;
+                dxf += `11\n${totalSize}\n21\n${y}\n31\n0\n`;
+            }
+
+            for (let col = 0; col <= state.gridSize; col++) {
+                const x = col * cellSize;
+                // 縦線
+                dxf += `0\nLINE\n8\nGRID\n`;
+                dxf += `10\n${x}\n20\n0\n30\n0\n`;
+                dxf += `11\n${x}\n21\n${totalSize}\n31\n0\n`;
+            }
+
+            // 各セルのデータを描画
+            for (let row = 0; row < state.gridSize; row++) {
+                for (let col = 0; col < state.gridSize; col++) {
+                    const key = `${row}-${col}`;
+                    const cellData = state.cells[key];
+
+                    // Y座標は下から上（CAD座標系）
+                    const x = col * cellSize;
+                    const y = (state.gridSize - 1 - row) * cellSize;
+                    const centerX = x + cellSize / 2;
+                    const centerY = y + cellSize / 2;
+
+                    // セル番号（左上）
+                    dxf += `0\nTEXT\n8\nTEXT\n`;
+                    dxf += `10\n${x + cellSize * 0.05}\n20\n${y + cellSize * 0.9}\n30\n0\n`;
+                    dxf += `40\n${smallTextHeight}\n`;
+                    dxf += `1\n${row + 1}-${col + 1}\n`;
+
+                    if (cellData) {
+                        const percent = cellData.crackPercent;
+                        let layer = 'CRACK_LOW';
+                        if (percent >= 5) layer = 'CRACK_HIGH';
+                        else if (percent >= 2) layer = 'CRACK_MEDIUM';
+
+                        // クラック率を中央に表示
+                        dxf += `0\nTEXT\n8\n${layer}\n`;
+                        dxf += `10\n${centerX}\n20\n${centerY + textHeight}\n30\n0\n`;
+                        dxf += `40\n${textHeight}\n`;
+                        dxf += `72\n1\n11\n${centerX}\n21\n${centerY + textHeight}\n31\n0\n`;
+                        dxf += `1\n${percent.toFixed(1)}%\n`;
+
+                        // 評価を表示
+                        if (cellData.rating) {
+                            dxf += `0\nTEXT\n8\nANNOTATION\n`;
+                            dxf += `10\n${centerX}\n20\n${centerY - textHeight}\n30\n0\n`;
+                            dxf += `40\n${smallTextHeight}\n`;
+                            dxf += `72\n1\n11\n${centerX}\n21\n${centerY - textHeight}\n31\n0\n`;
+                            dxf += `1\n${cellData.rating}\n`;
+                        }
+
+                        // ハイリスクセルは塗りつぶしハッチング（四角）
+                        if (percent >= 5) {
+                            // 対角線でマーク
+                            dxf += `0\nLINE\n8\nCRACK_HIGH\n`;
+                            dxf += `10\n${x}\n20\n${y}\n30\n0\n`;
+                            dxf += `11\n${x + cellSize}\n21\n${y + cellSize}\n31\n0\n`;
+                            dxf += `0\nLINE\n8\nCRACK_HIGH\n`;
+                            dxf += `10\n${x + cellSize}\n20\n${y}\n30\n0\n`;
+                            dxf += `11\n${x}\n21\n${y + cellSize}\n31\n0\n`;
+                        }
+
+                        // メモがあれば下部に表示
+                        if (cellData.note) {
+                            dxf += `0\nTEXT\n8\nANNOTATION\n`;
+                            dxf += `10\n${x + cellSize * 0.05}\n20\n${y + cellSize * 0.05}\n30\n0\n`;
+                            dxf += `40\n${smallTextHeight * 0.8}\n`;
+                            dxf += `1\n${cellData.note.substring(0, 20)}\n`;
+                        }
+                    } else {
+                        // 未撮影マーク
+                        dxf += `0\nTEXT\n8\nTEXT\n`;
+                        dxf += `10\n${centerX}\n20\n${centerY}\n30\n0\n`;
+                        dxf += `40\n${textHeight}\n`;
+                        dxf += `72\n1\n11\n${centerX}\n21\n${centerY}\n31\n0\n`;
+                        dxf += `1\n-\n`;
+                    }
+                }
+            }
+
+            // タイトルと凡例
+            const legendY = totalSize + cellSize * 0.3;
+            dxf += `0\nTEXT\n8\nTEXT\n`;
+            dxf += `10\n0\n20\n${legendY}\n30\n0\n`;
+            dxf += `40\n${textHeight * 1.5}\n`;
+            dxf += `1\nCRACK INSPECTION MAP\n`;
+
+            dxf += `0\nTEXT\n8\nTEXT\n`;
+            dxf += `10\n0\n20\n${legendY - textHeight * 2}\n30\n0\n`;
+            dxf += `40\n${smallTextHeight}\n`;
+            dxf += `1\nDate: ${new Date().toLocaleDateString('ja-JP')}\n`;
+
+            dxf += `0\nTEXT\n8\nTEXT\n`;
+            dxf += `10\n0\n20\n${legendY - textHeight * 3.5}\n30\n0\n`;
+            dxf += `40\n${smallTextHeight}\n`;
+            dxf += `1\nGrid: ${state.gridSize}x${state.gridSize} (${cellSize}mm/cell)\n`;
+
+            // 凡例
+            dxf += `0\nTEXT\n8\nCRACK_LOW\n`;
+            dxf += `10\n${totalSize * 0.6}\n20\n${legendY}\n30\n0\n`;
+            dxf += `40\n${smallTextHeight}\n`;
+            dxf += `1\nLOW: <2%\n`;
+
+            dxf += `0\nTEXT\n8\nCRACK_MEDIUM\n`;
+            dxf += `10\n${totalSize * 0.6}\n20\n${legendY - textHeight * 1.5}\n30\n0\n`;
+            dxf += `40\n${smallTextHeight}\n`;
+            dxf += `1\nMEDIUM: 2-5%\n`;
+
+            dxf += `0\nTEXT\n8\nCRACK_HIGH\n`;
+            dxf += `10\n${totalSize * 0.6}\n20\n${legendY - textHeight * 3}\n30\n0\n`;
+            dxf += `40\n${smallTextHeight}\n`;
+            dxf += `1\nHIGH: >=5%\n`;
+
+            dxf += '0\nENDSEC\n';
+
+            // ========== EOF ==========
+            dxf += '0\nEOF\n';
+
+            // ダウンロード
+            const blob = new Blob([dxf], { type: 'application/dxf' });
+            const link = document.createElement('a');
+            link.download = `crack_map_${new Date().toISOString().slice(0, 10)}.dxf`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+
+            showStatus('DXFファイルをエクスポートしました');
         }
 
         function importCSV(e) {
